@@ -36,9 +36,9 @@ const Home = ({ children }) => {
             console.error("Error fetching data:", error);
         }
     };
-    const logout = async ()=>{
+    const logout = async () => {
         const response = await axios("/api/logout")
-        if(response.data.status === 200){
+        if (response.data.status === 200) {
             alert("logout sucessfull")
             router.push("/login")
         }
@@ -60,7 +60,7 @@ const Home = ({ children }) => {
                     <button type="button" onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
                     {role === "admin" ? (
                         <Link href="/dashboard">
-                            <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                            <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                                 Dashboard
                             </button>
                         </Link>
