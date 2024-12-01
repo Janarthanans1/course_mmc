@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const Profile = () => {
-
     const router = useRouter()
     const [img, setImg] = useState(null);
     const [role, setRole] = useState("Guest");
@@ -50,10 +49,9 @@ const Profile = () => {
         try {
             const response = await axios("/api/getProfileVideo")
             const datam = response.data.videos
-            console.log(datam);
             const mp4 = datam.map(val => val.video); 
             setVideo(mp4);  
-            console.log(mp4);
+            
         } catch (error) {
             console.error(error);
         }
@@ -68,7 +66,7 @@ const Profile = () => {
     }, []);
 
     return (
-        <div id="main" className=" bg-gray-200 p-10">
+        <div id="main" className="h-[1100px] bg-gray-200 p-10">
             <div id="profile_card" className="h-[300px] rounded-lg bg-white flex ">
                 <div id="img" className="bg-blue-600 w-[300px] h-[300px] p-5 rounded-lg flex justify-center items-center">
                     <img src={img} alt="profile" className="rounded-full w-[200px] h-[200px]" />
@@ -82,8 +80,7 @@ const Profile = () => {
                     {role === "tutor" ? <button type="button" onClick={e => router.push("/profile/uploadVideo")}>Upload Video</button> : null}
                 </div>
             </div>
-
-            <h1 className="font-bold">Videos</h1>
+            {role==="tutor"?<div><h1 className="font-bold">Videos</h1>
             <div id="videos" className="h-[300px] rounded-lg bg-white flex flex-wrap gap-4 p-4">
                 {video.length > 0 ? (
                     video.map((vid, index) => (
@@ -94,9 +91,11 @@ const Profile = () => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-gray-500">No videos available</p>
+                    <p className="text-gray-500 font-bold text-4xl">No videos available</p>
                 )}
-            </div>
+            </div></div>:<div></div>}
+
+            
         </div>
     )
 }

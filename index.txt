@@ -1,0 +1,11 @@
+Computer_Science
+Commerce
+Hotel_Management
+Physics
+Mathematics
+Chemistry
+Bio_Technology
+Microbiology
+English
+Forensic_Science
+Sanitary_Inspector

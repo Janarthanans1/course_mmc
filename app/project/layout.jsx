@@ -74,9 +74,9 @@ const Home = ({ children }) => {
             <div id="dept_course" className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
                 {/* Department Links */}
                 <div id="dept" className="h-[900px] bg-white p-2 rounded-lg shadow-md row-span-3 flex flex-col space-y-5">
-                    <Link href="/project/course/computer_science" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Computer Science</Link>
+                    <Link href="/project/course/Computer_Science" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Computer Science</Link>
                     <Link href="/project/course/Commerce" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Commerce</Link>
-                    <Link href="/project/course/hotel_Management" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Hotel Management</Link>
+                    <Link href="/project/course/Hotel_Management" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Hotel Management</Link>
                     <Link href="/project/course/Physics" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Physics</Link>
                     <Link href="/project/course/Mathematics" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Mathematics</Link>
                     <Link href="/project/course/Chemistry" className="p-4 rounded-lg border-b-2 border-gray-700 text-black text-lg active:bg-blue-600 focus:bg-blue-600 focus:text-white">Chemistry</Link>

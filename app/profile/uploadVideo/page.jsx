@@ -74,6 +74,7 @@ const UploadVideo = () => {
                 setVideo("");
                 setVideoName("");
                 setDepartment("");
+               
             }
         } catch (error) {
             console.error("Error uploading video:", error);
@@ -169,23 +170,24 @@ const UploadVideo = () => {
                             required
                         >
                             <option value="">--Select Department--</option>
-                            <option value="Computer Science">Computer Science</option>
+                            <option value="Computer_Science">Computer Science</option>
                             <option value="Commerce">Commerce</option>
-                            <option value="Hotel Management">Hotel Management</option>
+                            <option value="Hotel_Management">Hotel Management</option>
                             <option value="Physics">Physics</option>
                             <option value="Mathematics">Mathematics</option>
                             <option value="Chemistry">Chemistry</option>
-                            <option value="Bio – Technology">Bio – Technology</option>
+                            <option value="Bio_Technology">Bio – Technology</option>
                             <option value="Microbiology">Microbiology</option>
                             <option value="English">English</option>
-                            <option value="Forensic Science">Forensic Science</option>
-                            <option value="Sanitary Inspector">Sanitary Inspector</option>
+                            <option value="Forensic_Science">Forensic Science</option>
+                            <option value="Sanitary_Inspector">Sanitary Inspector</option>
                         </select>
                     </div>
 
                     {/* Submit Button */}
                     <button
                         type="submit"
+                        onClick={e=>window.location.reload(false)}
                         className={`w-full py-2 px-4 font-semibold rounded transition duration-300 ${
                             loading
                                 ? "bg-gray-400 cursor-not-allowed"
