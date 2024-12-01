@@ -1,6 +1,15 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 const NotFoundPage = () => {
+  const router = useRouter()
+  const changeRoute=()=>{
+    router.push("/project")
+  }
+  useEffect(()=>{
+    changeRoute()
+  },[])
   return (
     <section className="flex items-center  p-16 text-gray-800">
       <div className="container flex flex-col items-center justify-center px-5 mx-auto my-8">

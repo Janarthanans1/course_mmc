@@ -26,29 +26,28 @@ const UploadVideo = () => {
         }
     };
 
-    const handleVideo = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const maxFileSize = 50 * 1024 * 1024; // Example: 50MB
-        if (file.size > maxFileSize) {
-            alert("File size exceeds the 50MB limit.");
+    const handleVideo = async(e)=>{
+        const file  = e.target.files[0]
+        if (file.size > 10 * 1024 * 1024) {
+            alert("File size exceeds 10MB limit. Please upload a smaller video.");
             return;
         }
-
-        const base64 = await convertVideoToBase64(file);
-        setVideo(base64);
-        setVideoName(file.name);
-    };
-
-    const convertVideoToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-            fileReader.onload = () => resolve(fileReader.result);
-            fileReader.onerror = (err) => reject(err);
-        });
-    };
+    
+        const base64 = await convertVideoToBase64(file)
+        console.log(base64)
+        setVideo(base64)
+        setVideoName(file.name)
+    }
+    const convertVideoToBase64=(file)=>{
+        return new Promise((resolve,reject)=>{
+            const filereader = new FileReader()
+            filereader.readAsDataURL(file)
+            filereader.onload=()=>resolve(filereader.result)
+            filereader.onerror=err=>reject(err)       
+        })
+    }
+    
+    
 
     const uploadVideo = async (e) => {
         e.preventDefault();

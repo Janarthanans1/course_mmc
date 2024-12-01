@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-
 const Profile = () => {
 
     const router = useRouter()
@@ -13,6 +12,7 @@ const Profile = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [department, setDepartment] = useState("");
+    const [video, setVideo] = useState([])
 
     const getData = async () => {
         try {
@@ -37,19 +37,36 @@ const Profile = () => {
             console.error("Error fetching data:", error);
         }
     };
-    
+
     const logout = async () => {
         const response = await axios("/api/logout")
         if (response.data.status === 200) {
-            alert("logout sucessfull")
+            alert("logout successful")
             router.push("/login")
         }
     }
 
+    const getVideo = async () => {
+        try {
+            const response = await axios("/api/getProfileVideo")
+            const datam = response.data.videos
+            console.log(datam);
+            const mp4 = datam.map(val => val.video); 
+            setVideo(mp4);  
+            console.log(mp4);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        getVideo()
+    }, [])
+
     useEffect(() => {
         getData()
-      
     }, []);
+
     return (
         <div id="main" className=" bg-gray-200 p-10">
             <div id="profile_card" className="h-[300px] rounded-lg bg-white flex ">
@@ -59,12 +76,26 @@ const Profile = () => {
                 <div id="details" className="p-5">
                     <h1 className="font-bold">{name}</h1>
                     <h1>Email  : {email}</h1>
-                    <h1>department:{department}</h1>
-                    <h1>role:{role}</h1>
+                    <h1>department: {department}</h1>
+                    <h1>role: {role}</h1>
                     <button type="button" onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
-                    {role==="tutor"?<button type="button" onClick={e=>router.push("/profile/uploadVideo")}>uploadVideo</button>:<div></div>}
-                    
+                    {role === "tutor" ? <button type="button" onClick={e => router.push("/profile/uploadVideo")}>Upload Video</button> : null}
                 </div>
+            </div>
+
+            <h1 className="font-bold">Videos</h1>
+            <div id="videos" className="h-[300px] rounded-lg bg-white flex flex-wrap gap-4 p-4">
+                {video.length > 0 ? (
+                    video.map((vid, index) => (
+                        <div key={index} className="w-[300px] h-[200px] bg-gray-200 flex items-center justify-center rounded-lg shadow-md p-2">
+                            <video src={vid} controls className="w-full h-full rounded-lg">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500">No videos available</p>
+                )}
             </div>
         </div>
     )
