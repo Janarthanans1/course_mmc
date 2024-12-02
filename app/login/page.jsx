@@ -10,10 +10,13 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Added loading state
 
   const loginForm = async (e) => {
     e.preventDefault();
     setError(""); // Clear any previous error
+    setLoading(true); // Set loading to true while form is being processed
+
     try {
       const response = await axios.post("api/login", {
         email,
@@ -26,29 +29,30 @@ const Login = () => {
       } else if (response.data.message === "Invalid Password") {
         setError("Incorrect password. Please try again.");
       } else if (response.data.status === 200) {
-        alert("User logged in successfully");
-        router.push("/project"); // Redirect user
+        router.push("/project"); // Redirect user after successful login
       }
     } catch (error) {
       console.error(error);
       setError("An error occurred. Please try again later.");
+    } finally {
+      setLoading(false); // Set loading back to false
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-semibold text-gray-800 text-center mb-6">
-          Login
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-blue-600">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+        <h1 className="text-3xl font-semibold text-gray-800 text-center mb-6">
+          Welcome Back!
         </h1>
-        <form onSubmit={loginForm}>
+        <form onSubmit={loginForm} className="space-y-4">
           {/* Email Input */}
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700"
             >
-              Email
+              Email Address
             </label>
             <input
               type="email"
@@ -56,14 +60,14 @@ const Login = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your email"
               required
             />
           </div>
 
           {/* Password Input */}
-          <div className="mb-4">
+          <div>
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700"
@@ -76,7 +80,7 @@ const Login = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your password"
               required
             />
@@ -84,18 +88,39 @@ const Login = () => {
 
           {/* Error Message */}
           {error && (
-            <p className="text-red-600 text-sm mb-4">{error}</p>
+            <p className="text-red-600 text-sm text-center">{error}</p>
           )}
 
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className={`w-full py-3 px-4 font-semibold rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-400 ${
+              loading
+                ? "bg-blue-300 cursor-not-allowed"
+                : "bg-blue-500 hover:bg-blue-600"
+            }`}
+            disabled={loading} // Disable button while loading
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
-          <p>Need an account?<Link className="text-blue-600 underline" href="/register">REGISTER</Link> </p>
+
+          {/* Registration Link */}
+          <div className="text-center">
+            <p className="text-sm text-gray-600">
+              Need an account?{" "}
+              <Link className="text-blue-600 font-medium" href="/register">
+                Register
+              </Link>
+            </p>
+          </div>
         </form>
+
+        {/* Loading Spinner */}
+        {loading && (
+          <div className="flex justify-center items-center mt-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 const Register = () => {
-    const router = useRouter()
+  const router = useRouter()
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [department,setDepartment]=useState("")
+  const [department, setDepartment] = useState("")
   const [img, setImg] = useState("profile.png"); // Default placeholder image
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -39,7 +39,7 @@ const Register = () => {
 
     try {
       const base64 = await convertImgToBase64(file);
-      
+
       setImg(base64); // Update the image state
       setError(""); // Clear any previous errors
     } catch (error) {
@@ -93,8 +93,8 @@ const Register = () => {
       setName("");
       setEmail("");
       setPassword("");
-      setImg("profile.png");      
-      if(response.data.status === 201){
+      setImg("profile.png");
+      if (response.data.status === 201) {
         router.push("/login")
       }
     } catch (error) {
@@ -106,7 +106,7 @@ const Register = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-400 to-blue-600">
       <div className="w-full max-w-md p-6 bg-white rounded shadow-md">
         <h1 className="text-2xl font-bold text-center text-gray-800">Register</h1>
 
@@ -148,29 +148,29 @@ const Register = () => {
             />
           </div>
           <div id="department" className="mb-4 ">
-  <label htmlFor="department" className="block text-gray-700 font-semibold mb-2">
-    Department
-  </label>
-  <select
-    id="department"
-    className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-    onChange={e=>setDepartment(e.target.value)}
-    required
-  >
-    <option value="">--Department--</option>
-    <option value="Computer Science">Computer Science</option>
-    <option value="Commerce">Commerce</option>
-    <option value="Hotel Management">Hotel Management</option>
-    <option value="Physics">Physics</option>
-    <option value="Mathematics">Mathematics</option>
-    <option value="Chemistry">Chemistry</option>
-    <option value="Bio – Technology">Bio – Technology</option>
-    <option value="Microbiology">Microbiology</option>
-    <option value="English">English</option>
-    <option value="Forensic Science">Forensic Science</option>
-    <option value="Sanitary Inspector">Sanitary Inspector</option>
-  </select>
-</div>
+            <label htmlFor="department" className="block text-gray-700 font-semibold mb-2">
+              Department
+            </label>
+            <select
+              id="department"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={e => setDepartment(e.target.value)}
+              required
+            >
+              <option value="">--Department--</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Commerce">Commerce</option>
+              <option value="Hotel Management">Hotel Management</option>
+              <option value="Physics">Physics</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Chemistry">Chemistry</option>
+              <option value="Bio – Technology">Bio – Technology</option>
+              <option value="Microbiology">Microbiology</option>
+              <option value="English">English</option>
+              <option value="Forensic Science">Forensic Science</option>
+              <option value="Sanitary Inspector">Sanitary Inspector</option>
+            </select>
+          </div>
 
           {/* Email */}
           <div className="mb-4">
@@ -212,8 +212,13 @@ const Register = () => {
             {loading ? "Registering..." : "Register"}
           </button>
           <p className="mt-4 text-center text-gray-600">
-  Already a user? <Link className="text-blue-600 underline" href="/login">LOGIN</Link>
-</p>
+            Already a user? <Link className="text-blue-600 font-medium" href="/login">Login</Link>
+          </p>
+          {loading && (
+            <div className="flex justify-center items-center mt-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          )}
         </form>
 
         {/* Error Message */}
