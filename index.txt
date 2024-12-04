@@ -9,3 +9,5 @@ Microbiology
 English
 Forensic_Science
 Sanitary_Inspector
+
+thumbnail

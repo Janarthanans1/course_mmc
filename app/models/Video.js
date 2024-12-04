@@ -5,6 +5,7 @@ const videoSchema = new mongoose.Schema({
     description:{type:String},
     department:{type:String},
     user:{ type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    img:{type:String},
     video:{type:String},
 })
 

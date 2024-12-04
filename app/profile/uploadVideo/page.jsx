@@ -8,75 +8,106 @@ const UploadVideo = () => {
   const router = useRouter();
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
-  const [video, setVideo] = useState(""); // Base64 string
-  const [videoName, setVideoName] = useState(""); // File name
+  const [imgData, setImgData] = useState({ base64: "", name: "" });
+  const [videoData, setVideoData] = useState({ base64: "", name: "" });
   const [department, setDepartment] = useState("");
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false); // New state for loading
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const getData = async () => {
     try {
       const response = await axios("/api/getUserData");
-      const gloData = {
-        email: response.data.user?.email || "",
-      };
-      setEmail(gloData.email);
+      setEmail(response.data.user?.email || "");
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error("Error fetching user data:", error);
     }
   };
 
+  // Convert files to Base64
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+    });
+
+  // Handle image upload
+  const handleImage = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return setError("No file selected.");
+
+    // Validate file size and type
+    if (file.size > 2 * 1024 * 1024) return setError("Image size must be under 2MB.");
+    if (!["image/jpeg", "image/png"].includes(file.type)) return setError("Only JPEG and PNG images are allowed.");
+
+    try {
+      const base64 = await convertToBase64(file);
+      // console.log(base64)
+      setImgData({ base64, name: file.name });
+      setError(""); // Clear errors
+    } catch (err) {
+      setError("Failed to process image.");
+      console.error(err);
+    }
+  };
+
+  // Handle video upload
   const handleVideo = async (e) => {
     const file = e.target.files[0];
-    if (file.size > 10 * 1024 * 1024) {
-      alert("File size exceeds 10MB limit. Please upload a smaller video.");
-      return;
+    if (!file) return setError("No file selected.");
+
+    // Validate file size
+    if (file.size > 10 * 1024 * 1024) return setError("Video size must be under 10MB.");
+
+    try {
+      const base64 = await convertToBase64(file);
+      setVideoData({ base64, name: file.name });
+      setError(""); // Clear errors
+    } catch (err) {
+      setError("Failed to process video.");
+      console.error(err);
     }
-
-    const base64 = await convertVideoToBase64(file);
-    setVideo(base64);
-    setVideoName(file.name);
   };
 
-  const convertVideoToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      fileReader.onload = () => resolve(fileReader.result);
-      fileReader.onerror = (err) => reject(err);
-    });
-  };
-
+  // Handle form submission
   const uploadVideo = async (e) => {
     e.preventDefault();
 
-    if (!video) {
-      alert("Please upload a video file.");
-      return;
+    if (!videoData.base64 || !title || !description || !department) {
+      return setError("Please fill in all the required fields.");
     }
 
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await axios.post("/api/uploadVideo", {
-        video,
+        video: videoData.base64,
+        img: imgData.base64,
         title,
         description,
         department,
         email,
       });
+      
+      
 
       if (response.data.status === 201) {
         setDescription("");
         setTitle("");
-        setVideo("");
-        setVideoName("");
+        setImgData({ base64: "", name: "" });
+        setVideoData({ base64: "", name: "" });
         setDepartment("");
-        router.refresh(); // Refresh the page
+        setError(""); // Clear any errors
+        router.refresh();
+      } else {
+        setError("Failed to upload video. Please try again.");
       }
     } catch (error) {
-      console.error("Error uploading video:", error);
+      setError("An error occurred while uploading.");
+      console.error(error);
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
@@ -91,14 +122,20 @@ const UploadVideo = () => {
           Upload Video
         </h1>
         <form onSubmit={uploadVideo} className="mt-8 space-y-6">
+          {error && (
+            <div className="text-red-500 text-center font-semibold">
+              {error}
+            </div>
+          )}
+
           {/* Video Upload */}
           <div className="flex flex-col items-center mb-6">
             <label
               htmlFor="video"
               className="flex items-center justify-center w-full h-48 bg-gray-200 border border-dashed rounded-lg cursor-pointer hover:bg-gray-300"
             >
-              {videoName ? (
-                <span className="text-gray-700">{videoName}</span>
+              {videoData.name ? (
+                <span className="text-gray-700">{videoData.name}</span>
               ) : (
                 <span className="text-gray-500">Click to upload video</span>
               )}
@@ -108,6 +145,27 @@ const UploadVideo = () => {
                 className="hidden"
                 accept="video/*"
                 onChange={handleVideo}
+              />
+            </label>
+          </div>
+
+          {/* Thumbnail Upload */}
+          <div className="mb-6 text-center">
+            <label
+              htmlFor="image"
+              className="flex items-center justify-center w-full h-48 bg-gray-200 border border-dashed rounded-lg cursor-pointer hover:bg-gray-300"
+            >
+              {imgData.name ? (
+                <span className="text-gray-700">{imgData.name}</span>
+              ) : (
+                <span className="text-gray-500">Click to upload thumbnail</span>
+              )}
+              <input
+                type="file"
+                id="image"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImage}
               />
             </label>
           </div>
@@ -151,7 +209,7 @@ const UploadVideo = () => {
           </div>
 
           {/* Department */}
-          <div id="department" className="mb-4">
+          <div className="mb-4">
             <label
               htmlFor="department"
               className="block text-gray-700 font-semibold mb-2"
@@ -218,9 +276,10 @@ const UploadVideo = () => {
           <button
             type="button"
             onClick={() => router.push("/profile")}
-            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-300"
+            className="mt-4 w-full py-2 px-4 bg-gray-300 text-gray-700 font-semibold rounded hover:bg-gray-400"
+            disabled={loading}
           >
-            Back to profile
+            Back to Profile
           </button>
         </form>
       </div>
